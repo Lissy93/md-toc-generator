@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Markdown Table of Contents Generator</title>
+    <meta
+      name="description"
+      content="Simple script to generate a table of contents, for a markdown document"
+    />
+  </head>
+
+  <body>
+    <h1>Markdown Table of Contents Generator</h1>
+
+    <section class="input-section">
+      <h3>Input</h3>
+      <label for="mdInput">Paste your markdown here:</label>
+      <textarea id="mdInput"></textarea>
+      <button onClick="generateOutput()">Generate</button>
+    </section>
+
+    <section class="output-section">
+      <h3>Output</h3>
+      <textarea id="result"></textarea>
+    </section>
+
+    <section class="about-section">
+      <h3>About</h3>
+      <p>
+        A very simple script to build a table of contents, for a given
+        markdown document. Supports nested headings, and includes hyperlink to
+        the appropriate heading hash.
+      </p>
+      <p>
+        Just paste all your markdown into the input, then hit generate, and the
+        results will be generated, and coppied to your clipboard.
+      </p>
+      <p class="license-info">
+        Code available on GitHub at
+        <a href="https://github.com/Lissy93/md-toc-generator"
+          >Lissy93/md-toc-generator</a
+        >
+        <br />
+        Licensed under MIT, ©
+        <a href="https://aliciasykes.com">Alicia Sykes</a> 2023
+      </p>
+    </section>
+
+    <script>
+
+      const generateTOC = (markdown) => {
+        const headers = markdown.match(/^#+ .+/gm);
+        if (!headers) return "";
+
+        const toc = headers.map((header) => {
+          let level = header.match(/^#+/g)[0].length;
+          let text = header.replace(/^#+ /, "");
+          return `${" ".repeat(
+            level - 1
+          )}- [${text}](#${text.toLowerCase().replace(/\s+/g, "-")})`;
+        });
+        return `## Contents\n\n${toc.join("\n")}`;
+      };
+
+
+      const generateOutput = () => {
+        // Get value of input
+        const userInput = document.getElementById("mdInput").value;
+        // Calculate results
+        const results = generateTOC(userInput);
+        // Show output section
+        const outputSection = document.querySelector(".output-section");
+        outputSection.style.display = "flex";
+        // Copy results to clipboard
+        navigator.clipboard.writeText(results);
+        // Display results in results textarea
+        document.getElementById("result").value = results;
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "Roboto", Verdana, Helvetica, sans-serif;
+        color: white;
+        background: #0d0e20;
+        padding-bottom: 2rem;
+      }
+      h1 {
+        font-size: 2.5rem;
+        text-align: center;
+      }
+      h3 {
+        margin: 0;
+      }
+      textarea,
+      input,
+      button,
+      pre {
+        color: #fff;
+        font-family: courier, sans-serif;
+        height: 150px;
+        outline: none;
+        border: 2px solid #00010a8c;
+        border-radius: 5px;
+        margin: 1rem;
+        background: #0d0e20;
+      }
+      textarea {
+        resize: none;
+      }
+      input {
+        height: 2.5rem;
+        padding: 0 1rem;
+        font-size: 1rem;
+      }
+      label {
+        margin: 1rem 1rem 0;
+        font-style: italic;
+      }
+      button {
+        height: 2.5rem;
+        margin: 0 1rem 1rem;
+        font-size: 1rem;
+        font-weight: thin;
+        font-family: "Roboto", Verdana, Helvetica, sans-serif;
+        cursor: pointer;
+      }
+      pre {
+        min-height: 150px;
+        height: fit-content;
+        overflow: hidden;
+        padding: 0.5rem;
+      }
+      input:focus,
+      textarea:focus,
+      button:hover {
+        background: #00010a8c;
+      }
+      .input-section,
+      .output-section,
+      .about-section {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin: 1rem auto;
+        padding: 1rem;
+        border-radius: 5px;
+        background: #ffffff0a;
+        box-shadow: 2px 10px 10px rgb(0 0 0 / 33%),
+          0 1px 2px rgba(0, 0, 0, 0.24);
+        max-width: 800px;
+      }
+      .output-section {
+        display: none;
+      }
+      .license-info {
+        font-size: 0.8rem;
+        margin: 0;
+        text-align: center;
+        opacity: 0.8;
+      }
+      img {
+        margin: 0.25rem;
+      }
+      a {
+        color: #fff;
+      }
+    </style>
+  </body>
+</html>
